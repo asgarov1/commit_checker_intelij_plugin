@@ -1,0 +1,25 @@
+<idea-plugin>
+    <id>com.javidasgarov.commit_checker</id>
+    <name>Commit Checker</name>
+    <vendor email="asgarov1@gmail.com">Javid Asgarov</vendor>
+
+    <description><![CDATA[
+    This Plugin checks files selected for commit for a specified keyword
+    <br/>
+    <br/>
+    To specify keywords, just create a file called `commit_checker.txt` and in there specify words to look out for separated by comma
+    <br/>
+    There is also a checkbox in Commit window that allows you to enable/disable commit checker
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.vcs</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <checkinHandlerFactory implementation="com.javidasgarov.commit_checker.handler.CommitHandlerFactoryImpl"/>
+    </extensions>
+</idea-plugin>
