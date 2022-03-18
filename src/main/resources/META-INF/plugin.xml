@@ -4,7 +4,7 @@
     <vendor email="asgarov1@gmail.com">Javid Asgarov</vendor>
 
     <description><![CDATA[
-    This Plugin checks files selected for commit for a specified keyword. If found it will ask for a confirmation upon
+    This Plugin checks files selected for commit for the specified keywords. If found it will ask for a confirmation upon
     commit, warning of a found keyword.
     <br/>
     <em>It will only alarm for newly added words, not the ones that existed also before the commit.</em>
@@ -19,8 +19,6 @@
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->
     <depends>com.intellij.modules.platform</depends>
-    <depends>com.intellij.modules.java</depends>
-    <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.vcs</depends>
 
     <extensions defaultExtensionNs="com.intellij">

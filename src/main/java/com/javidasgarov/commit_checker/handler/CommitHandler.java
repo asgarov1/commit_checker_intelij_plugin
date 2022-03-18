@@ -7,8 +7,8 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.checkin.CheckinHandler;
 import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.util.ui.UIUtil;
-import com.javidasgarov.commit_checker.util.FileUtil;
 import com.javidasgarov.commit_checker.checker.ChangeChecker;
+import com.javidasgarov.commit_checker.util.FileUtil;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -90,13 +90,19 @@ public class CommitHandler extends CheckinHandler {
 
         final String html =
                 "<html><body>"
-                        + "Files selected for commit include keyword '" + found.get() + "'."
+                        + "Changes staged for commit contain keyword '" + found.get() + "'."
                         + "<br>"
                         + "<br>"
-                        + "Do you wish to continue ?"
+                        + "Are you sure you want to commit those?"
                         + "</body></html>";
 
-        int forceCommit = Messages.showYesNoDialog(html, "Forbidden Keyword Is Found", UIUtil.getWarningIcon());
+        int forceCommit = Messages.showDialog(
+                html,
+                "Forbidden Keyword Is Found",
+                new String[]{"Yes, I Know What I'm Doing", "No"},
+                1,
+                UIUtil.getErrorIcon()
+        );
 
         if (forceCommit == Messages.YES) {
             return ReturnResult.COMMIT;

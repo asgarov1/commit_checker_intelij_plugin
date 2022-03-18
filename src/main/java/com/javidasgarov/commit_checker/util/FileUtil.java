@@ -6,7 +6,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.search.FileTypeIndex;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +26,7 @@ public class FileUtil {
                 .map(content -> content.split(","))
                 .flatMap(Arrays::stream)
                 .map(String::trim)
-                .filter(StringUtils::isNotBlank)
+                .filter(word -> word.length() > 0)
                 .collect(Collectors.toList());
     }
 
