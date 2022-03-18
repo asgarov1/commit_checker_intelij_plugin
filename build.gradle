@@ -4,28 +4,22 @@ plugins {
 }
 
 group 'com.javidasgarov'
-version '1.0-SNAPSHOT'
+version '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
-    testCompileOnly 'org.projectlombok:lombok:1.18.22'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 intellij {
     plugins = ['com.intellij.java']
 }
 patchPluginXml {
-    sinceBuild = '191'
+    sinceBuild = '192'
 }
 
 buildSearchableOptions {

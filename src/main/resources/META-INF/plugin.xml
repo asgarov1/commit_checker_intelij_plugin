@@ -4,10 +4,14 @@
     <vendor email="asgarov1@gmail.com">Javid Asgarov</vendor>
 
     <description><![CDATA[
-    This Plugin checks files selected for commit for a specified keyword
+    This Plugin checks files selected for commit for a specified keyword. If found it will ask for a confirmation upon
+    commit, warning of a found keyword.
+    <br/>
+    <em>It will only alarm for newly added words, not the ones that existed also before the commit.</em>
     <br/>
     <br/>
-    To specify keywords, just create a file called `commit_checker.txt` and in there specify words to look out for separated by comma
+    To specify keywords, just create a file (anywhere inside of Project) called `commit_checker.txt`
+    and in there specify words to look out for separated by comma (line breaks don't matter)
     <br/>
     There is also a checkbox in Commit window that allows you to enable/disable commit checker
     ]]></description>
