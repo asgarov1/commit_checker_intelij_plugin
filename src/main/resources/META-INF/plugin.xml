@@ -4,17 +4,40 @@
     <vendor email="asgarov1@gmail.com">Javid Asgarov</vendor>
 
     <description><![CDATA[
-    This Plugin checks files selected for commit for the specified keywords. If found it will ask for a confirmation upon
-    commit, warning of a found keyword.
+    Checks files selected for commit for the specified files/keywords.
+    If found it will ask for a confirmation upon commit, warning of a found file/keyword.
     <br/>
-    <em>It will only alarm for newly added words, not the ones that existed also before the commit.</em>
+<br/>
+    <em>With keywords: it will only alarm for newly added words, not the ones that existed also before the commit.</em>
     <br/>
     <br/>
-    To specify keywords, just create a file (anywhere inside of Project) called `commit_checker.txt`
-    and in there specify words to look out for separated by comma (line breaks don't matter)
+    To specify files/keywords, just create a file (anywhere inside of Project) called `commit_checker.yml`
+and in there specify files and keywords like so in such format:
     <br/>
+    <code><br/>
+        keywords:<br/>
+        &nbsp;&nbsp;- foo<br/>
+        &nbsp;&nbsp;- bar<br/>
+        &nbsp;&nbsp;...<br/>
+        files:<br/>
+        &nbsp;&nbsp;- foo.html<br/>
+        &nbsp;&nbsp;- bar.component.ts<br/>
+        &nbsp;&nbsp;...<br/>
+    </code>
+
+    <br/>
+    Alternatively, you can create a `commit_checker.txt`
+    and in there specify words to look out for separated by comma (line breaks don't matter):
+    <br/><br/>
+    <code>foo, bar, foo.java, bar.js</code>
+    <br/><br/>
     There is also a checkbox in Commit window that allows you to enable/disable commit checker
     ]]></description>
+
+    <change-notes><![CDATA[
+        <h3>Version 1.1.0</h3>
+        <p>Added feature - Support for yml files</p>
+    ]]></change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->

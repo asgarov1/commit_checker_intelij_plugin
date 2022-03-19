@@ -4,6 +4,7 @@ import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
 import lombok.SneakyThrows;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -11,7 +12,29 @@ import java.util.stream.Collectors;
 
 public class ChangeChecker {
 
-    public static Optional<String> findMatch(Change change, List<String> keywords) {
+    public static Optional<String> fileIsStaged(Collection<Change> changes, List<String> filenames) {
+        return getAddedChanges(changes).stream()
+                .filter(change -> change.getVirtualFile() != null)
+                .map(change -> change.getVirtualFile().getName())
+                .filter(filenames::contains)
+                .findFirst();
+    }
+
+    private static Set<Change> getAddedChanges(Collection<Change> changes) {
+        return changes.stream()
+                .filter(change -> change.getType() == Change.Type.MODIFICATION || change.getType() == Change.Type.NEW)
+                .collect(Collectors.toSet());
+    }
+
+    public static Optional<String> containsKeyword(Collection<Change> changes, List<String> keywords) {
+        return getAddedChanges(changes).stream()
+                .map(change -> ChangeChecker.findMatch(change, keywords))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .findFirst();
+    }
+
+    private static Optional<String> findMatch(Change change, List<String> keywords) {
         ContentRevision beforeRevision = change.getBeforeRevision();
         ContentRevision afterRevision = change.getAfterRevision();
 
@@ -33,11 +56,11 @@ public class ChangeChecker {
 
     @SneakyThrows
     private static boolean contains(ContentRevision revision, String keyword) {
-        return revision.getContent().contains(keyword);
+        return revision.getContent() != null && revision.getContent().contains(keyword);
     }
 
     @SneakyThrows
     private static boolean doesNotContain(ContentRevision revision, String keyword) {
-        return !revision.getContent().contains(keyword);
+        return revision.getContent() != null && !revision.getContent().contains(keyword);
     }
 }

@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.javidasgarov'
-version '1.0.2'
+version '1.1.0'
 
 repositories {
     mavenCentral()
@@ -13,6 +13,9 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
+    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.2'
 }
 
 intellij {

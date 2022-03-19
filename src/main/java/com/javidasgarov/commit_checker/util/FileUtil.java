@@ -1,27 +1,51 @@
 package com.javidasgarov.commit_checker.util;
 
-import com.intellij.openapi.fileTypes.PlainTextFileType;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.search.FileTypeIndex;
+import com.intellij.psi.search.FilenameIndex;
+import com.intellij.psi.search.GlobalSearchScope;
+import com.javidasgarov.commit_checker.dto.CommitCheckerDto;
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.intellij.psi.search.GlobalSearchScope.projectScope;
 
 @UtilityClass
 public class FileUtil {
 
-    public static final String FILE_NAME = "commit_checker.txt";
+    public static final String YML_FILE_NAME = "commit_checker.yml";
+    public static final String TXT_FILE_NAME = "commit_checker.txt";
 
     public static List<String> loadKeywords(CheckinProjectPanel panel) {
-        return FileTypeIndex.getFiles(PlainTextFileType.INSTANCE, projectScope(panel.getProject()))
+        return getYmlFile(panel.getProject())
+                .map(FileUtil::loadKeywordsFromYml)
+                .orElseGet(() -> loadKeywordsFromTxt(panel.getProject()));
+    }
+
+    public static List<String> loadFilenames(CheckinProjectPanel panel) {
+        return getYmlFile(panel.getProject())
+                .map(YmlUtil::readFromFile)
+                .map(CommitCheckerDto::getFiles)
+                .orElseGet(() -> loadKeywordsFromTxt(panel.getProject()));
+    }
+
+    private static Optional<VirtualFile> getYmlFile(Project project) {
+        return FilenameIndex.getVirtualFilesByName(YML_FILE_NAME, GlobalSearchScope.projectScope(project))
                 .stream()
-                .filter(file -> file.getName().equals(FILE_NAME))
+                .findFirst();
+    }
+
+    private static List<String> loadKeywordsFromYml(VirtualFile ymlFile) {
+        return YmlUtil.readFromFile(ymlFile).getKeywords();
+    }
+
+    private static List<String> loadKeywordsFromTxt(Project project) {
+        return FilenameIndex.getVirtualFilesByName(TXT_FILE_NAME, GlobalSearchScope.projectScope(project))
+                .stream()
                 .map(FileUtil::getContent)
                 .map(content -> content.split(","))
                 .flatMap(Arrays::stream)
