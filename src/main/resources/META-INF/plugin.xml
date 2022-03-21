@@ -36,7 +36,11 @@ and in there specify files and keywords like so in such format:
 
     <change-notes><![CDATA[
         <h3>Version 1.1.0</h3>
-        <p>Added feature - Support for yml files</p>
+        <p>Added feature - 1. Support for yml files</p>
+        <p>Added feature - 2. Can check for both files and keywords</p>
+        <br/>
+        <h3>Version 1.2.0</h3>
+        <p>Added feature - Support for regex</p>
     ]]></change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html

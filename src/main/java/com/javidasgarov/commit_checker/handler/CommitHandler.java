@@ -8,7 +8,6 @@ import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.intellij.util.ui.UIUtil;
 import com.javidasgarov.commit_checker.util.TextUtil;
 import com.javidasgarov.commit_checker.util.FileUtil;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -24,6 +23,7 @@ public class CommitHandler extends CheckinHandler {
     private static final String CHECK_ADDED_CHANGES_CHECKBOX = "CHECK_ADDED_CHANGES_CHECKBOX";
     public static final String CONFIRM_OPTION = "Yes, I Know What I'm Doing";
     public static final String NO = "No";
+    public static final String CHECKBOX_LABEL = "Check added changes for files/keywords specified in check_commit.yml (.txt)";
 
     private final CheckinProjectPanel panel;
 
@@ -37,7 +37,7 @@ public class CommitHandler extends CheckinHandler {
 
     @Override
     public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
-        final JCheckBox checkBox = new JCheckBox("Check added changes for keywords specified in check_commit.txt");
+        final JCheckBox checkBox = new JCheckBox(CHECKBOX_LABEL);
 
         return new RefreshableOnComponent() {
             @Override

@@ -10,13 +10,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.javidasgarov.commit_checker.checker.RegexChecker.isRegex;
+
 public class ChangeChecker {
 
     public static Optional<String> fileIsStaged(Collection<Change> changes, List<String> filenames) {
         return getAddedChanges(changes).stream()
                 .filter(change -> change.getVirtualFile() != null)
                 .map(change -> change.getVirtualFile().getName())
-                .filter(filenames::contains)
+                .filter(filename -> filenames.contains(filename) || RegexChecker.isARegexMatch(filename, filenames))
                 .findFirst();
     }
 
@@ -34,6 +36,14 @@ public class ChangeChecker {
                 .findFirst();
     }
 
+    /**
+     * This method only calls for a match if afterRevision file does include the changed
+     *  AND beforeRevision file does NOT.
+     *
+     * @param change Change object
+     * @param keywords keywords to look for
+     * @return whether there is a match
+     */
     private static Optional<String> findMatch(Change change, List<String> keywords) {
         ContentRevision beforeRevision = change.getBeforeRevision();
         ContentRevision afterRevision = change.getAfterRevision();
@@ -51,16 +61,17 @@ public class ChangeChecker {
         }
 
         return foundInAfterRevision.stream()
-                .filter(keyword -> doesNotContain(beforeRevision, keyword)).findFirst();
+                .filter(keyword -> !contains(beforeRevision, keyword)).findFirst();
     }
 
     @SneakyThrows
     private static boolean contains(ContentRevision revision, String keyword) {
-        return revision.getContent() != null && revision.getContent().contains(keyword);
-    }
+        if (revision.getContent() == null)
+            return false;
 
-    @SneakyThrows
-    private static boolean doesNotContain(ContentRevision revision, String keyword) {
-        return revision.getContent() != null && !revision.getContent().contains(keyword);
+        if (isRegex(keyword)) {
+            return RegexChecker.matches(revision.getContent(), keyword);
+        }
+        return revision.getContent().contains(keyword);
     }
 }

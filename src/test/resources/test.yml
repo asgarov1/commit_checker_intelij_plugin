@@ -1,0 +1,9 @@
+keywords:
+  - apple
+  - /[A-Z]{5}/
+  - /[A-z]+\d+/
+  - /\d\d\d-\d\d\d/
+files:
+  - demo.html
+  - /.+\.html/
+  - /.+\.ts/

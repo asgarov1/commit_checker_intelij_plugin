@@ -4,25 +4,34 @@ plugins {
 }
 
 group 'com.javidasgarov'
-version '1.1.0'
+version '1.2.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation 'org.projectlombok:lombok:1.18.22'
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.2'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.13.2'
+
+    // test
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter-params:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.22'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 }
 
 intellij {
     plugins = ['com.intellij.java']
 }
 patchPluginXml {
-    sinceBuild = '192'
+    sinceBuild = '212'
 }
 
 buildSearchableOptions {
