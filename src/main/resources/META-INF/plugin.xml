@@ -14,7 +14,8 @@
     To specify files/keywords, just create a file (anywhere inside of Project) called `commit_checker.yml`
 and in there specify files and keywords like so in such format:
     <br/>
-    <code><br/>
+    <br/>
+    <code>
         keywords:<br/>
         &nbsp;&nbsp;- foo<br/>
         &nbsp;&nbsp;- bar<br/>
@@ -22,24 +23,27 @@ and in there specify files and keywords like so in such format:
         files:<br/>
         &nbsp;&nbsp;- foo.html<br/>
         &nbsp;&nbsp;- bar.component.ts<br/>
+        &nbsp;&nbsp;- /.*\.html/<br/>
         &nbsp;&nbsp;...<br/>
     </code>
-
+    <br/>
+    <em>There is support for regexes, which have to be enclosed by `/`
+    (e.g. to match FOO-1234 you can use <code>/FOO-\d{4}/</code>)</em>
     <br/>
     Alternatively, you can create a `commit_checker.txt`
     and in there specify words to look out for separated by comma (line breaks don't matter):
     <br/><br/>
     <code>foo, bar, foo.java, bar.js</code>
     <br/><br/>
-    There is also a checkbox in Commit window that allows you to enable/disable commit checker
+    There is also a checkbox in Commit window that allows you to enable/disable commit checker.
     ]]></description>
 
     <change-notes><![CDATA[
-        <h3>Version 1.1.0</h3>
+        <h4>Version 1.1.0</h4>
         <p>Added feature - 1. Support for yml files</p>
         <p>Added feature - 2. Can check for both files and keywords</p>
-        <br/>
-        <h3>Version 1.2.0</h3>
+
+        <h4>Version 1.2.0</h4>
         <p>Added feature - Support for regex</p>
     ]]></change-notes>
 
