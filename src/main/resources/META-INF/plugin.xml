@@ -33,7 +33,7 @@ and in there specify files and keywords like so in such format:
     Alternatively, you can create a `commit_checker.txt`
     and in there specify words to look out for separated by comma (line breaks don't matter):
     <br/><br/>
-    <code>foo, bar, foo.java, bar.js</code>
+    <code>foo, bar, foo.java, bar.js, /.*\.html/</code>
     <br/><br/>
     There is also a checkbox in Commit window that allows you to enable/disable commit checker.
     ]]></description>
@@ -45,6 +45,9 @@ and in there specify files and keywords like so in such format:
 
         <h4>Version 1.2.0</h4>
         <p>Added feature - Support for regex</p>
+
+        <h4>Version 1.2.1</h4>
+        <p>Improved warning messages displayed for regex matches</p>
     ]]></change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html

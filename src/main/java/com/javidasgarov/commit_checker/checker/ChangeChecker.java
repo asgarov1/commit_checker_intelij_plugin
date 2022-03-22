@@ -2,33 +2,47 @@ package com.javidasgarov.commit_checker.checker;
 
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
+import com.javidasgarov.commit_checker.dto.*;
 import lombok.SneakyThrows;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.intellij.openapi.vcs.changes.Change.Type.MODIFICATION;
+import static com.intellij.openapi.vcs.changes.Change.Type.NEW;
+import static com.javidasgarov.commit_checker.checker.RegexChecker.findRegexMatch;
 import static com.javidasgarov.commit_checker.checker.RegexChecker.isRegex;
 
 public class ChangeChecker {
 
-    public static Optional<String> fileIsStaged(Collection<Change> changes, List<String> filenames) {
+    public static Optional<Matchable> fileIsStaged(Collection<Change> changes, List<String> readFilenames) {
         return getAddedChanges(changes).stream()
                 .filter(change -> change.getVirtualFile() != null)
-                .map(change -> change.getVirtualFile().getName())
-                .filter(filename -> filenames.contains(filename) || RegexChecker.isARegexMatch(filename, filenames))
+                .map(change -> filenameMatches(change, readFilenames))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .findFirst();
+    }
+
+    private static Optional<Matchable> filenameMatches(Change change, List<String> filenames) {
+        String stagedFilename = change.getVirtualFile().getName();
+
+        if (filenames.contains(stagedFilename)) {
+            return Optional.of(new PlainFilenameMatch(stagedFilename));
+        }
+
+        return findRegexMatch(stagedFilename, filenames)
+                .map(matchedRegex -> new RegexFilenameMatch(stagedFilename, matchedRegex));
+
     }
 
     private static Set<Change> getAddedChanges(Collection<Change> changes) {
         return changes.stream()
-                .filter(change -> change.getType() == Change.Type.MODIFICATION || change.getType() == Change.Type.NEW)
+                .filter(change -> List.of(MODIFICATION, NEW).contains(change.getType()))
                 .collect(Collectors.toSet());
     }
 
-    public static Optional<String> containsKeyword(Collection<Change> changes, List<String> keywords) {
+    public static Optional<Matchable> containsKeyword(Collection<Change> changes, List<String> keywords) {
         return getAddedChanges(changes).stream()
                 .map(change -> ChangeChecker.findMatch(change, keywords))
                 .filter(Optional::isPresent)
@@ -38,13 +52,13 @@ public class ChangeChecker {
 
     /**
      * This method only calls for a match if afterRevision file does include the changed
-     *  AND beforeRevision file does NOT.
+     * AND beforeRevision file does NOT.
      *
-     * @param change Change object
+     * @param change   Change object
      * @param keywords keywords to look for
      * @return whether there is a match
      */
-    private static Optional<String> findMatch(Change change, List<String> keywords) {
+    private static Optional<Matchable> findMatch(Change change, List<String> keywords) {
         ContentRevision beforeRevision = change.getBeforeRevision();
         ContentRevision afterRevision = change.getAfterRevision();
 
@@ -52,7 +66,8 @@ public class ChangeChecker {
             return Optional.empty();
         }
 
-        Set<String> foundInAfterRevision = keywords.stream()
+        Set<String> foundInAfterRevision = keywords
+                .stream()
                 .filter(keyword -> contains(afterRevision, keyword))
                 .collect(Collectors.toSet());
 
@@ -60,8 +75,15 @@ public class ChangeChecker {
             return Optional.empty();
         }
 
-        return foundInAfterRevision.stream()
-                .filter(keyword -> !contains(beforeRevision, keyword)).findFirst();
+        String stagedFileName = change.getVirtualFile().getName();
+
+        return foundInAfterRevision
+                .stream()
+                .filter(keyword -> !contains(beforeRevision, keyword))
+                .findFirst()
+                .map(match -> isRegex(match) ?
+                        new RegexKeywordMatch(stagedFileName, match) :
+                        new PlainKeywordMatch(stagedFileName, match));
     }
 
     @SneakyThrows

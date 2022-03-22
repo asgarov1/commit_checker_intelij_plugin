@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,8 +25,9 @@ public class RegexChecker {
         return matcher.find();
     }
 
-    public static boolean isARegexMatch(String fileName, List<String> regexes) {
+    public static Optional<String> findRegexMatch(String fileName, List<String> regexes) {
         return regexes.stream()
-                .anyMatch(regex -> matches(fileName, regex));
+                .filter(regex -> matches(fileName, regex))
+                .findFirst();
     }
 }
