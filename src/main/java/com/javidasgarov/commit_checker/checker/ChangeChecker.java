@@ -16,7 +16,8 @@ import static com.javidasgarov.commit_checker.checker.RegexChecker.isRegex;
 public class ChangeChecker {
 
     public static Optional<Matchable> fileIsStaged(Collection<Change> changes, List<String> readFilenames) {
-        return getAddedChanges(changes).stream()
+        return changes.stream()
+                .filter(change -> List.of(MODIFICATION, NEW).contains(change.getType()))
                 .filter(change -> change.getVirtualFile() != null)
                 .map(change -> filenameMatches(change, readFilenames))
                 .filter(Optional::isPresent)
@@ -24,26 +25,9 @@ public class ChangeChecker {
                 .findFirst();
     }
 
-    private static Optional<Matchable> filenameMatches(Change change, List<String> filenames) {
-        String stagedFilename = change.getVirtualFile().getName();
-
-        if (filenames.contains(stagedFilename)) {
-            return Optional.of(new PlainFilenameMatch(stagedFilename));
-        }
-
-        return findRegexMatch(stagedFilename, filenames)
-                .map(matchedRegex -> new RegexFilenameMatch(stagedFilename, matchedRegex));
-
-    }
-
-    private static Set<Change> getAddedChanges(Collection<Change> changes) {
+    public static Optional<Matchable> containsKeyword(Collection<Change> changes, List<String> keywords) {
         return changes.stream()
                 .filter(change -> List.of(MODIFICATION, NEW).contains(change.getType()))
-                .collect(Collectors.toSet());
-    }
-
-    public static Optional<Matchable> containsKeyword(Collection<Change> changes, List<String> keywords) {
-        return getAddedChanges(changes).stream()
                 .map(change -> ChangeChecker.findMatch(change, keywords))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -61,7 +45,6 @@ public class ChangeChecker {
     private static Optional<Matchable> findMatch(Change change, List<String> keywords) {
         ContentRevision beforeRevision = change.getBeforeRevision();
         ContentRevision afterRevision = change.getAfterRevision();
-
         if (beforeRevision == null || afterRevision == null) {
             return Optional.empty();
         }
@@ -71,12 +54,9 @@ public class ChangeChecker {
                 .filter(keyword -> contains(afterRevision, keyword))
                 .collect(Collectors.toSet());
 
-        if (foundInAfterRevision.isEmpty()) {
-            return Optional.empty();
-        }
+        if (foundInAfterRevision.isEmpty()) { return Optional.empty(); }
 
         String stagedFileName = change.getVirtualFile().getName();
-
         return foundInAfterRevision
                 .stream()
                 .filter(keyword -> !contains(beforeRevision, keyword))
@@ -95,5 +75,17 @@ public class ChangeChecker {
             return RegexChecker.matches(revision.getContent(), keyword);
         }
         return revision.getContent().contains(keyword);
+    }
+
+    private static Optional<Matchable> filenameMatches(Change change, List<String> filenames) {
+        String stagedFilename = change.getVirtualFile().getName();
+
+        if (filenames.contains(stagedFilename)) {
+            return Optional.of(new PlainFilenameMatch(stagedFilename));
+        }
+
+        return findRegexMatch(stagedFilename, filenames)
+                .map(matchedRegex -> new RegexFilenameMatch(stagedFilename, matchedRegex));
+
     }
 }

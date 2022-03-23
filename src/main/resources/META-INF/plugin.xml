@@ -11,8 +11,8 @@
     <em>With keywords: it will only alarm for newly added words, not the ones that existed also before the commit.</em>
     <br/>
     <br/>
-    To specify files/keywords, just create a file (anywhere inside of Project) called `commit_checker.yml`
-and in there specify files and keywords like so in such format:
+    To specify files/keywords, just create a file (anywhere inside of the Project) called `commit_checker.yml`
+and in there specify files and keywords in the following format:
     <br/>
     <br/>
     <code>
@@ -30,11 +30,13 @@ and in there specify files and keywords like so in such format:
     <em>There is support for regexes, which have to be enclosed by `/`
     (e.g. to match FOO-1234 you can use <code>/FOO-\d{4}/</code>)</em>
     <br/>
+    <br/>
     Alternatively, you can create a `commit_checker.txt`
     and in there specify words to look out for separated by comma (line breaks don't matter):
-    <br/><br/>
+    <br/>
     <code>foo, bar, foo.java, bar.js, /.*\.html/</code>
-    <br/><br/>
+    <br/>
+    <br/>
     There is also a checkbox in Commit window that allows you to enable/disable commit checker.
     ]]></description>
 
