@@ -16,6 +16,7 @@ import static com.javidasgarov.commit_checker.checker.RegexChecker.isRegex;
 public class ChangeChecker {
 
     public static Optional<Matchable> fileIsStaged(Collection<Change> changes, List<String> readFilenames) {
+        // abcd
         return changes.stream()
                 .filter(change -> List.of(MODIFICATION, NEW).contains(change.getType()))
                 .filter(change -> change.getVirtualFile() != null)
