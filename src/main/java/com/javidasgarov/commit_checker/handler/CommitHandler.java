@@ -6,7 +6,6 @@ import com.intellij.openapi.vcs.ui.RefreshableOnComponent;
 import com.javidasgarov.commit_checker.dto.Matchable;
 import com.javidasgarov.commit_checker.util.FileUtil;
 import git4idea.repo.GitRepositoryManager;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class CommitHandler extends CheckinHandler {
     }
 
     @Override
-    public @Nullable RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
+    public RefreshableOnComponent getBeforeCheckinConfigurationPanel() {
         return getRefreshableOnComponent();
     }
 
