@@ -34,7 +34,7 @@ public class FileUtil {
     }
 
     private static Optional<VirtualFile> getYmlFile(Project project) {
-        return FilenameIndex.getVirtualFilesByName(YML_FILE_NAME, GlobalSearchScope.projectScope(project))
+        return FilenameIndex.getVirtualFilesByName(project, YML_FILE_NAME, GlobalSearchScope.projectScope(project))
                 .stream()
                 .findFirst();
     }
@@ -44,7 +44,7 @@ public class FileUtil {
     }
 
     private static List<String> loadKeywordsFromTxt(Project project) {
-        return FilenameIndex.getVirtualFilesByName(TXT_FILE_NAME, GlobalSearchScope.projectScope(project))
+        return FilenameIndex.getVirtualFilesByName(project, TXT_FILE_NAME, GlobalSearchScope.projectScope(project))
                 .stream()
                 .map(FileUtil::getContent)
                 .map(content -> content.split(","))
