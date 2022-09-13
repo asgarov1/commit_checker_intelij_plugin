@@ -54,6 +54,9 @@ and in there specify files and keywords in the following format:
         <h4>Version 1.2.2</h4>
         <p>Updated to be compatible with newer Intellij version (222+) </p>
         <p>Fixed a bug where completely new files were not checked</p>
+
+        <h4>Version 1.2.3</h4>
+        <p>Minor improvements regarding null safety</p>
     ]]></change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
