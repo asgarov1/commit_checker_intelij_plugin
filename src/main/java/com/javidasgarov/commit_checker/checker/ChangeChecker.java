@@ -2,10 +2,14 @@ package com.javidasgarov.commit_checker.checker;
 
 import com.intellij.openapi.vcs.changes.Change;
 import com.intellij.openapi.vcs.changes.ContentRevision;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.javidasgarov.commit_checker.dto.*;
 import lombok.SneakyThrows;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.intellij.openapi.vcs.changes.Change.Type.MODIFICATION;
@@ -46,7 +50,7 @@ public class ChangeChecker {
     private static Optional<Matchable> findMatch(Change change, List<String> keywords) {
         ContentRevision beforeRevision = change.getBeforeRevision();
         ContentRevision afterRevision = change.getAfterRevision();
-        if (beforeRevision == null || afterRevision == null) {
+        if (afterRevision == null) {
             return Optional.empty();
         }
 
@@ -55,9 +59,11 @@ public class ChangeChecker {
                 .filter(keyword -> contains(afterRevision, keyword))
                 .collect(Collectors.toSet());
 
-        if (foundInAfterRevision.isEmpty()) { return Optional.empty(); }
+        if (foundInAfterRevision.isEmpty()) {
+            return Optional.empty();
+        }
 
-        String stagedFileName = change.getVirtualFile().getName();
+        String stagedFileName = Optional.ofNullable(change.getVirtualFile()).map(VirtualFile::getName).orElse("Unknown");
         return foundInAfterRevision
                 .stream()
                 .filter(keyword -> !contains(beforeRevision, keyword))
@@ -69,8 +75,9 @@ public class ChangeChecker {
 
     @SneakyThrows
     private static boolean contains(ContentRevision revision, String keyword) {
-        if (revision.getContent() == null)
+        if (revision == null || revision.getContent() == null) {
             return false;
+        }
 
         if (isRegex(keyword)) {
             return RegexChecker.matches(revision.getContent(), keyword);
@@ -79,7 +86,7 @@ public class ChangeChecker {
     }
 
     private static Optional<Matchable> filenameMatches(Change change, List<String> filenames) {
-        String stagedFilename = change.getVirtualFile().getName();
+        String stagedFilename = Optional.ofNullable(change.getVirtualFile()).map(VirtualFile::getName).orElse("Unknown");
 
         if (filenames.contains(stagedFilename)) {
             return Optional.of(new PlainFilenameMatch(stagedFilename));
