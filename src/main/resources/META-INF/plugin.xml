@@ -60,6 +60,9 @@ and in there specify files and keywords in the following format:
 
         <h4>[1.3.0] - 2023-09-24</h4>
         <p>Updated to work with latest Intellij version (232+)</p>
+
+        <h4>[1.3.1] - 2024-03-23</h4>
+        <p>Updated to work with latest Intellij version (213+)</p>
     ]]></change-notes>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
